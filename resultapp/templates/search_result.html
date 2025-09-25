@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow">
+                <div class="card-header text-center bg-dark text-white">
+                    <h4><i class="fas fa-graduation-cap me-2"></i>Search Result</h4>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+    {% for m in messages %}
+    
+    <div class=" text-center mt-5 alert alert-{% if m.tags == 'error' %}danger{% else %}{{m.tags}} {% endif %} alert-dismissable fade show" role="alert">
+        {{m}}
+        <button class="btn-close" type="button" data-bs-dismiss="alert"></button>
+    </div>
+
+    {% endfor %}
+    {% endif %}
+                     <form method="post" action="{% url "check_result" %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="rollid" class="form-label"><i class="fas fa-user"></i>Roll No.</label>
+                        <input type="text" class="form-control" id="rollid" name="rollid" placeholder="Enter your Roll No"  required>
+                    </div>
+
+                    <div class="mb-3">
+
+            <label for="classname" class="form-label">Select Class</label>
+            <select name="classname" id="classname" required class="form-select">
+                <option value="">-- SELECT CLASS --</option>
+
+                {% for i in  classes%}
+                <option value="{{i.id}}">{{i.class_name}} - Section {{i.section}}</option>
+                
+                {% endfor %}
+            </select>
+        </div>
+
+                    <button type="submit" class="btn btn-success w-100"><i class="fas fa-check me-2"></i>Search</button>
+                </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h2 class="mb-4"><i class="fas fa-plus me-1"></i>Add Subject Combination</h2>
+
+    {% if messages %}
+    {% for m in messages %}
+    
+    <div class="alert alert-{% if m.tags == 'error' %}danger{% else %}{{m.tags}} {% endif %} alert-dismissable fade show" role="alert">
+        {{m}}
+        <button class="btn-close" type="button" data-bs-dismiss="alert"></button>
+    </div>
+
+    {% endfor %}
+    {% endif %}
+    <form method="post" action="{% url "add_subject_combination" %}">
+        {% csrf_token %}
+
+        <div class="mb-3">
+
+            <label for="classname" class="form-label">Select Class</label>
+            <select name="classname" id="classname" required class="form-select">
+                <option value="">-- SELECT CLASS --</option>
+
+                {% for i in  classes%}
+                <option value="{{i.id}}">{{i.class_name}} - Section {{i.section}}</option>
+                
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+
+            <label for="subjectname" class="form-label">Select Subject</label>
+            <select name="subjectname" id="subjectname" required class="form-select">
+                <option value="">-- SELECT SUBJECT --</option>
+
+                {% for i in  subjects %}
+                <option value="{{i.id}}">{{i.subject_name}} -  {{i.subject_code}}</option>
+                
+                {% endfor %}
+            </select>
+        </div>
+
+       
+
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-check-circle me-1"></i>Submit
+        </button>
+    </form>
+</div>
+
+{% endblock %}

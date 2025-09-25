@@ -1,0 +1,94 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h2 class="mb-4"><i class="fas fa-plus-circle me-1"></i>Declare Result</h2>
+
+    {% if messages %}
+    {% for m in messages %}
+    
+    <div class="alert alert-{% if m.tags == 'error' %}danger{% else %}{{m.tags}} {% endif %} alert-dismissable fade show" role="alert">
+        {{m}}
+        <button class="btn-close" type="button" data-bs-dismiss="alert"></button>
+    </div>
+
+    {% endfor %}
+    {% endif %}
+    <form method="post" action="{% url "add_result" %}">
+        {% csrf_token %}
+
+
+        <div class="mb-3">
+
+            <label for="classname" class="form-label">Select Class</label>
+            <select name="class" id="class_id" required class="form-select">
+                <option value="">-- SELECT CLASS --</option>
+
+                {% for i in  classes%}
+                <option value="{{i.id}}">{{i.class_name}} - Section {{i.section}}</option>
+                
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+
+            <label for="student" class="form-label">Select Student</label>
+            <select name="student" id="student_id" required class="form-select">
+                <option value="">-- SELECT STUDENT --</option>
+
+            </select>
+        </div>
+
+
+        <div id="subjects_fields">
+
+        </div>
+
+
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-check-circle me-1"></i>Submit
+        </button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('class_id').addEventListener('change',function(){
+        const classId = this.value;
+
+        if(!classId)return;
+
+        fetch(`/get_students_subjects/?class_id=${classId}`)
+        .then(res => res.json())
+        .then(data => {
+            const studentSelect = document.getElementById('student_id');
+            studentSelect.innerHTML = '<option value="">-- SELECT STUDENT --</option>'
+
+            data.students.forEach(stu => {
+                const opt = document.createElement('option')
+                opt.value = stu.id;
+                opt.text = `${stu.name} (ROLL ID: ${stu.roll_id})`
+                studentSelect.appendChild(opt);
+
+            });
+
+            const subjectFields = document.getElementById('subjects_fields')
+            subjectFields.innerHTML = '<h5 class="mt-5">Subjects and Marks</h5>'
+
+            data.subjects.forEach(sub => {
+                const div = document.createElement('div')
+                div.className = 'mb-3'
+                div.innerHTML = `<label class="form-label">${sub.name}</label>
+                                <input class="form-control" required type="number" name="marks_${sub.id}">
+                `
+                subjectFields.appendChild(div)
+            });
+        })
+
+
+    })
+</script>
+
+{% endblock %}

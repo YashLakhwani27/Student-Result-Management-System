@@ -1,0 +1,66 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h2 class="mb-4"><i class="fas fa-list me-1"></i>Manage Results</h2>
+
+    {% if messages %}
+    {% for m in messages %}
+    
+    <div class="alert alert-{% if m.tags == 'error' %}danger{% else %}{{m.tags}} {% endif %} alert-dismissable fade show" role="alert">
+        {{m}}
+        <button class="btn-close" type="button" data-bs-dismiss="alert"></button>
+    </div>
+
+    {% endfor %}
+    {% endif %}
+
+
+    <table class="table table-bordered table-striped ">
+        <thead class="table-dark">
+
+            <tr>
+                <th>S.No</th>
+                <th>Name</th>
+                <th>Roll Id</th>
+                <th>Class and Section</th>
+                <th>Status</th>
+                <th>Registration Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i  in  results %}
+
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td style="white-space: normal; word-wrap: break-word; max-width: 400px;">{{i.student.name}}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word; max-width: 500px;">{{i.student.roll_id}}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word; max-width: 500px;">{{i.class.class_name}} - Section {{i.class.section}}</td>
+
+                <td>
+                    {% if i.student.status == 1 %}
+                    <span class="badge bg-success">Active</span>
+                    {% else %}
+                     <span class="badge bg-danger">InActive</span>
+                    {% endif %}
+                </td>
+                <td>{{i.student.reg_date}}</td>
+                <td>
+                    <a href="{% url "edit_result" i.student.id %}" class="btn btn-info btn-sm"><i class="fas fa-edit me-1"></i></a>
+                   
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class='text-center'>No Result found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+</div>
+
+{% endblock %}

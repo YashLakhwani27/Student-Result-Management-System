@@ -1,0 +1,21 @@
+# Create .gitignore file
+echo "# Django specific files
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+.env
+venv/
+env/
+.DS_Store
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+Thumbs.db" > .gitignore
